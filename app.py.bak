@@ -65,7 +65,7 @@ def upload_file():
         dic['Effectiveness']=str(val[0])
         dic['Efficiency']=str(val[1])
         dic['Satsfication']=str(val[2])
-        dic['overall']=str(val[3]).split('and it is')[1].replace("')", "")
+        dic['overall']=str(val[3]).split('and it is')[1].replace(')', '')
         res.append(dic)
         # res.append(["tweet: "+key,' The Effectiveness score is : '+str(val[0]) ,' The Efficiency score is : '+str(val[1]),' The Satsfication score is : '+str(val[2]),val[3]])
     # for i in range(len(combine)):

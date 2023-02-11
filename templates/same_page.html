@@ -65,6 +65,7 @@
     </style>
   </head>
   <script>
+    var fileData;
     function myFunction() {
       var text1 = $("#inp").val();
       $.ajax({
@@ -82,6 +83,7 @@
       });
     }
     var textBtn = $("#text-btn");
+
     function showTextContainer() {
       $("#text-container").show();
       $("#file-container").hide();
@@ -109,13 +111,74 @@
       }).done(function (response) {
         let html = "<br><p> RESULT : </p>";
         response = response.result.output;
-        console.log(response ,'Same_PAGE RESPONSE');
+        fileData = response;
+
+        // console.log(response, "Same_PAGE RESPONSE1");
+        // console.log(fileData, "Same_PAGE RESPONSE");
+        // response = fileData;
         response.forEach((val) => {
-          html += `<p style="background-color: #456fa0; text-align: center; width: 100%;">${val}</p>`;
+          let keys = Object.keys(val);
+          keys.forEach((key) => {
+            html += `<p style="background-color: #456fa0; text-align: center; width: 100%;">
+            <span> ${key} : ${val[key]}</span>
+            </p>`;
+          });
         });
         $(".show-data").html(html);
       });
     }
+
+    function downloadFile() {
+      const csvdata = csvmaker(fileData);
+      download(csvdata);
+    }
+
+    const download = function (data) {
+      // Creating a Blob for having a csv file format
+      // and passing the data with type
+      const blob = new Blob([data], { type: "text/csv" });
+
+      // Creating an object for downloading url
+      const url = window.URL.createObjectURL(blob);
+
+      // Creating an anchor(a) tag of HTML
+      const a = document.createElement("a");
+
+      // Passing the blob downloading url
+      a.setAttribute("href", url);
+
+      // Setting the anchor tag attribute for downloading
+      // and passing the download file name
+      a.setAttribute("download", "download.csv");
+
+      // Performing a download with click
+      a.click();
+    };
+
+    const csvmaker = function (data) {
+      // Empty array for storing the values
+      csvRows = [];
+      console.log(data);
+      // Headers is basically a keys of an
+      // object which is id, name, and
+      // profession
+      const headers = Object.keys(data[0]);
+
+      // As for making csv format, headers
+      // must be separated by comma and
+      // pushing it into array
+      csvRows.push(headers.join(","));
+
+      // Pushing Object values into array
+      // with comma separation
+      const values = data.map((item) => {
+        let obj = Object.values(item).join(",");
+        csvRows.push(obj);
+      });
+
+      // Returning the array joining with new line
+      return csvRows.join("\n");
+    };
   </script>
 
   <body>
@@ -148,6 +211,7 @@
           style="width: 30%"
         /><br />
         <button id="clicked" onclick="testFile()">Submit</button>
+        <button id="clicked" onclick="downloadFile()">Download</button>
       </p>
       <div
         class="show-data"
