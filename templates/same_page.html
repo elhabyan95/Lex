@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>First Flask App</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Raleway"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+      body,
+      h1 {
+        font-family: "Raleway", sans-serif;
+      }
+
+      body,
+      html {
+        height: 100%;
+      }
+
+      .bgimg {
+        background-image: url("https://www.w3schools.com//w3images/forestbridge.jpg");
+        min-height: 100%;
+        background-position: center;
+        background-size: cover;
+      }
+
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        background-color: #4caf50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      #file-container {
+        display: none;
+      }
+
+      div {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <script>
+    function myFunction() {
+      var text1 = $("#inp").val();
+      $.ajax({
+        url: "/join",
+        type: "POST",
+        data: { text1: text1 },
+      }).done(function (response) {
+        let html = "<br><p> RESULT : </p>";
+        response = response.result.output;
+        console.log(response);
+        response.forEach((val) => {
+          html += `<p style="background-color: #456fa0; text-align: center; width: 100%;">${val}</p>`;
+        });
+        $(".show-data").html(html);
+      });
+    }
+    var textBtn = $("#text-btn");
+    function showTextContainer() {
+      $("#text-container").show();
+      $("#file-container").hide();
+    }
+    var fileBtn = $("#file-btn");
+    function showFileContainer() {
+      $("#text-container").hide();
+      $("#file-container").show();
+    }
+    function testFile() {
+      var file = $("#file-input")[0].files[0];
+      console.log(file);
+      var myformData = new FormData();
+      myformData.append("file", file);
+
+      $.ajax({
+        url: "/fileUpload",
+        enctype: "multipart/form-data",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        // cache: false,
+        data: myformData,
+        // data: { file: myformData },
+      }).done(function (response) {
+        let html = "<br><p> RESULT : </p>";
+        response = response.result.output;
+        console.log(response ,'Same_PAGE RESPONSE');
+        response.forEach((val) => {
+          html += `<p style="background-color: #456fa0; text-align: center; width: 100%;">${val}</p>`;
+        });
+        $(".show-data").html(html);
+      });
+    }
+  </script>
+
+  <body>
+    <div
+      class="bgimg w3-display-container w3-animate-opacity w3-text-white"
+      align="center"
+    >
+      <button id="text-btn" onClick="showTextContainer()">Text</button>
+      <button id="file-btn" onClick="showFileContainer()">File</button>
+      <p id="text-container">
+        <label for="inp">Enter Text</label>
+        <input
+          type="text"
+          id="inp"
+          name="inp"
+          placeholder="Enter The Text"
+          required
+          style="width: 30%"
+        /><br />
+        <button id="clicked" onclick="myFunction()">Submit</button>
+      </p>
+      <p id="file-container">
+        <label for="inp">Enter File</label>
+        <input
+          type="file"
+          placeholder="Enter The File"
+          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          required
+          id="file-input"
+          style="width: 30%"
+        /><br />
+        <button id="clicked" onclick="testFile()">Submit</button>
+      </p>
+      <div
+        class="show-data"
+        style="background-color: #456fa0; text-align: center; width: auto"
+      ></div>
+    </div>
+  </body>
+</html>

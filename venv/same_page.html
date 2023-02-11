@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First Flask App</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        body,h1 {font-family: "Raleway", sans-serif}
+        body, html {height: 100%}
+        .bgimg {
+          background-image: url('https://www.w3schools.com//w3images/forestbridge.jpg');
+          min-height: 100%;
+          background-position: center;
+          background-size: cover;
+        }
+        input[type=text], select {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+        }
+        
+        input[type=submit] {
+          width: 100%;
+          background-color: #4CAF50;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        
+        input[type=submit]:hover {
+          background-color: #45a049;
+        }
+        
+        div {
+          border-radius: 5px;
+          background-color: #f2f2f2;
+          padding: 20px;
+        }
+        </style>
+</head>
+<script>
+function myFunction() {
+var text1= $('#inp').val();
+  $.ajax({
+              url: "/join",
+              type: "POST",
+              data: {text1:text1}
+          }).done(function(response) {
+            var html= "<br><br><br><p> <b> RESULT : <b><p>";
+            response =response.result;
+                 $.each(response,function(key,val){
+                 console.log(val);
+                    html+="<p> effectiveness :"+val[0]+"<p><br><p>efficiency :"+val[1]+"</p>"+"<p><br><p>satsifaction :"+val[2]+"</p>"+"<p><br><p>useablity :"+val[3]+"</p>"
+                });
+                html +="<br>";
+                
+                $(".show-data").append(html);
+                
+            });
+};
+  </script>
+<body>
+    <div class="bgimg w3-display-container w3-animate-opacity w3-text-white" align="center">
+
+    <p>
+            <label for="inp">Enter Name</label>
+                <input type="text"  id="inp" name="inp" placeholder="Enter The Text" required style="width: 30%"><br>
+            <button id="clicked" onclick="myFunction()">Submit</button>
+        </p>
+    <div class="show-data" style="background-color: #456fa0" >
+
+    </div>
+    </div>
+</body>
+</html>
